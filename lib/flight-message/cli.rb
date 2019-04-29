@@ -24,6 +24,9 @@
 # For more information on Flight Message, please visit:
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
+require 'flight-message/commands'
+require 'flight-message/version'
+
 require 'commander'
 
 module FlightMessage
@@ -47,6 +50,30 @@ module FlightMessage
           args_str
         ].compact.join(' ')
        end
+    end
+
+    command :create do |c|
+      cli_syntax(c, 'TYPE ASSET TEXT')
+      c.description = "Create a new message"
+      c.action(Commands, :create)
+    end
+
+    command :show do |c|
+      cli_syntax(c)
+      c.description = "Show the status of all assets"
+      c.action(Commands, :show)
+    end
+
+    command :delete do |c|
+      cli_syntax(c, 'ID')
+      c.description = "Delete an existing message"
+      c.action(Commands, :delete)
+    end
+
+    command :reap do |c|
+      c.hidden = true
+      c.description = "Remove all messages that have been made obselete"
+      c.action(Commands, :reap)
     end
   end
 end
