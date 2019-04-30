@@ -35,9 +35,9 @@ module FlightMessage
       def run
         if path = Message.find(@argv[0])
           File.delete(path)
-          p "'#{File.expand_path(path)}' has been deleted"
+          puts "'#{File.expand_path(path)}' has been deleted"
         else
-          p "No message found for uuid '#{@argv[0]}'"
+          puts "No message found for uuid '#{@argv[0]}'"
         end
       end
     end
