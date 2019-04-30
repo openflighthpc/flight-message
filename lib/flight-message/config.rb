@@ -47,11 +47,13 @@ module FlightMessage
       end
     end
 
-    attr_reader :root_dir, :store_dir
+    attr_reader :root_dir, :store_dir, :default_cluster
 
     def initialize
       @root_dir = File.expand_path(File.join(File.dirname(__FILE__), '../..'))
       @store_dir = File.join(@root_dir, 'var/store')
+      @cluster_config = File.join(@root_dir, 'etc/clusters.yml')
+      @default_cluster = Utils.load_yaml(@cluster_config)['default']
     end
   end
 end
