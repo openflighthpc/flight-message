@@ -45,6 +45,14 @@ module FlightMessage
           return nil
         end
       end
+
+      def split_path(path)
+        if m = path.match(/^#{Config.store_dir}\/(.*)\/(.*)\/(.*$)/)
+          return m[1..3]
+        else
+          raise MessageError, 'Internal error - unable to split invalid path'
+        end
+      end
     end
 
     TYPES = ['status', 'information']
@@ -62,6 +70,14 @@ module FlightMessage
       data['type'] = type
       data['text'] = text
       data['received'] = Time.now.iso8601
+    end
+
+    def load_from_id(id = @id)
+      unless path = Message.find(id)
+        raise MessageError, "Internal error - unable to load message '#{id}'"
+      end
+      @cluster, @asset, _ = Message.split_path(path)
+      self.data
     end
 
     def data
