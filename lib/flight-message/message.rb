@@ -31,6 +31,7 @@ require 'flight-message/utils'
 
 require 'fileutils'
 require 'securerandom'
+require 'time'
 
 module FlightMessage
   class Message
@@ -60,7 +61,7 @@ module FlightMessage
       @cluster = cluster
       data['type'] = type
       data['text'] = text
-      data['received'] = Time.now
+      data['received'] = Time.now.iso8601
     end
 
     def data
