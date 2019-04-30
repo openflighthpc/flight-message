@@ -39,8 +39,9 @@ module FlightMessage
 
         cluster = @options.cluster || Config.default_cluster
 
-        #TODO sort?
-        Dir.glob(File.join(Config.store_dir, cluster, '*')).each do |asset_dir|
+        asset_dirs = Dir.glob(File.join(Config.store_dir, cluster, '*'))
+        asset_dirs.sort!
+        asset_dirs.each do |asset_dir|
           messages = Dir.glob(File.join(asset_dir, '*')).map do |p|
             message = Message.new(File.basename(p))
             message.load_from_id
