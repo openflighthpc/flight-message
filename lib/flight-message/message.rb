@@ -34,6 +34,18 @@ require 'securerandom'
 
 module FlightMessage
   class Message
+    class << self
+      def find(id)
+        glob = Dir.glob(File.join(Config.store_dir, '**', id))
+
+        if glob.length == 1
+          return glob[0]
+        else
+          return nil
+        end
+      end
+    end
+
     TYPES = ['status', 'information']
 
     def initialize(id = SecureRandom.uuid)

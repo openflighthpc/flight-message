@@ -27,15 +27,15 @@
 
 require 'flight-message/command'
 require 'flight-message/config'
+require 'flight-message/message'
 
 module FlightMessage
   module Commands
     class Delete < Command
       def run
-        glob = Dir.glob(File.join(Config.store_dir, '**', @argv[0]))
-        if glob.length == 1
-          File.delete(glob[0])
-          p "'#{File.expand_path(glob[0])}' has been deleted"
+        if path = Message.find(@argv[0])
+          File.delete(path)
+          p "'#{File.expand_path(path)}' has been deleted"
         else
           p "No message found for uuid '#{@argv[0]}'"
         end
