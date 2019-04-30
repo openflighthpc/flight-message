@@ -55,6 +55,8 @@ module FlightMessage
       end
     end
 
+    attr_reader :id
+
     TYPES = ['status', 'information']
 
     def initialize(id = SecureRandom.uuid)
