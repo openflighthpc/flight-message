@@ -71,6 +71,7 @@ module FlightMessage
     end
 
     command :reap do |c|
+      cli_syntax(c)
       c.hidden = true
       c.description = "Remove all messages that have been made obselete"
       c.action(Commands, :reap)
