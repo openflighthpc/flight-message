@@ -34,11 +34,7 @@ module FlightMessage
     class Reap < Command
       def run
         Dir.glob(File.join(Config.store_dir, '*', '*')).each do |asset_dir|
-          messages = Dir[File.join(asset_dir, '*')].map do |p|
-            message = Message.new(File.basename(p))
-            message.load_from_id
-            message
-          end
+          messages = Message.load_dir(asset_dir)
 
           messages.delete_if do |m|
             if m.data['expiry'] and m.data['expiry'] < Time.now.iso8601

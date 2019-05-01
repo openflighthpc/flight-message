@@ -53,6 +53,14 @@ module FlightMessage
           raise MessageError, 'Internal error - unable to split invalid path'
         end
       end
+
+      def load_dir(dir)
+          return Dir.glob(File.join(dir, '*')).map do |p|
+            message = Message.new(File.basename(p))
+            message.load_from_id
+            message
+          end
+      end
     end
 
     attr_reader :id

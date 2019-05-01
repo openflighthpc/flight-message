@@ -42,11 +42,7 @@ module FlightMessage
         asset_dirs = Dir.glob(File.join(Config.store_dir, cluster, '*'))
         asset_dirs.sort!
         asset_dirs.each do |asset_dir|
-          messages = Dir.glob(File.join(asset_dir, '*')).map do |p|
-            message = Message.new(File.basename(p))
-            message.load_from_id
-            message
-          end
+          messages = Message.load_dir(asset_dir)
           status_msg, info = messages.partition { |m| m.data['type'] == 'status' }
           header = "##{File.basename(asset_dir)}"
           unless status_msg.empty?
