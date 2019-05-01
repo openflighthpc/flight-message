@@ -34,10 +34,9 @@ module FlightMessage
   module Commands
     class Show < Command
       def run
-        #TODO reap
-        #Reap.run
-
         cluster = @options.cluster || Config.default_cluster
+
+        Message.reap(cluster)
 
         asset_dirs = Dir.glob(File.join(Config.store_dir, cluster, '*'))
         asset_dirs.sort!
