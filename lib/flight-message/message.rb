@@ -80,7 +80,9 @@ module FlightMessage
       @cluster = cluster
       data['type'] = type
       data['text'] = text
-      data['received'] = Time.now.iso8601
+      received = Time.now
+      data['received'] = received.iso8601
+      data['expiry'] = parse_lifespan(lifespan, received).iso8601 if lifespan
     end
 
     def load_from_id(id = @id)
@@ -116,6 +118,26 @@ module FlightMessage
       FileUtils.mkdir_p(File.dirname(path))
       yaml = data.to_yaml
       File.open(path, 'w') { |f| f.write(yaml) }
+    end
+
+    private
+    def parse_lifespan(lifespan, received)
+      unless m = lifespan.match(/^(\d+)([dhm])$/)
+        raise ArgumentError, <<-ERROR
+Invalid lifespan '#{lifespan}'
+Specify an amount of days (d), hours (h), or minutes (m)"
+        ERROR
+      end
+      quantity, unit = m[1].to_i, m[2]
+      expiry = case unit
+        when 'd'
+          received + (quantity * 24 * 60 * 60)
+        when 'h'
+          received + (quantity * 60 * 60)
+        when 'm'
+          received + (quantity * 60)
+      end
+      return expiry
     end
   end
 end
