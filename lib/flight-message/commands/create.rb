@@ -33,7 +33,7 @@ module FlightMessage
     class Create < Command
       def run
         msg = Message.new()
-        msg.create(*@argv[0..2])
+        msg.create(*@argv[0..2], @options.cluster)
         msg.save
       end
     end

@@ -50,17 +50,24 @@ module FlightMessage
           args_str
         ].compact.join(' ')
        end
+
+      def add_cluster_option(command)
+        command.option '-c', '--cluster CLUSTER',
+          'Specify a cluter (defaults to the value set in the config file)'
+      end
     end
 
     command :create do |c|
       cli_syntax(c, 'TYPE ASSET TEXT')
       c.description = "Create a new message"
+      add_cluster_option(c)
       c.action(Commands, :create)
     end
 
     command :show do |c|
       cli_syntax(c)
       c.description = "Show the status of all assets"
+      add_cluster_option(c)
       c.action(Commands, :show)
     end
 

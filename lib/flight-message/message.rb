@@ -71,10 +71,11 @@ module FlightMessage
       @id = id
     end
 
-    def create(type, asset, text, cluster = Config.default_cluster, lifespan = nil)
+    def create(type, asset, text, cluster = nil, lifespan = nil)
       unless TYPES.include?(type)
         raise ArgumentError, "Unknown message type '#{type}'"
       end
+      cluster ||= Config.default_cluster
       @asset = asset
       @cluster = cluster
       data['type'] = type
