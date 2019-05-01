@@ -61,6 +61,24 @@ module FlightMessage
             message
           end
       end
+
+      def reap(cluster = '*')
+        Dir.glob(File.join(Config.store_dir, cluster, '*')).each do |asset_dir|
+          messages = Message.load_dir(asset_dir)
+
+          messages.delete_if do |m|
+            if m.data['expiry'] and m.data['expiry'] < Time.now.iso8601
+              File.delete(m.path)
+            end
+          end
+
+          statuses = messages.select { |m| m.data['type'] == 'status' }
+          statuses = statuses.sort_by { |m| m.data['received'] }
+          # delete all but the most recent
+          statuses.pop
+          statuses.each { |m| File.delete(m.path) }
+        end
+      end
     end
 
     attr_reader :id

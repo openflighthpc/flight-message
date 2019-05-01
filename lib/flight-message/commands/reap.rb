@@ -26,28 +26,13 @@
 # ==============================================================================
 
 require 'flight-message/command'
-
-require 'time'
+require 'flight-message/message'
 
 module FlightMessage
   module Commands
     class Reap < Command
       def run
-        Dir.glob(File.join(Config.store_dir, '*', '*')).each do |asset_dir|
-          messages = Message.load_dir(asset_dir)
-
-          messages.delete_if do |m|
-            if m.data['expiry'] and m.data['expiry'] < Time.now.iso8601
-              File.delete(m.path)
-            end
-          end
-
-          statuses = messages.select { |m| m.data['type'] == 'status' }
-          statuses = statuses.sort_by { |m| m.data['received'] }
-          # delete all but the most recent
-          statuses.pop
-          statuses.each { |m| File.delete(m.path) }
-        end
+        Message.reap
       end
     end
   end
