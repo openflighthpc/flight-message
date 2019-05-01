@@ -29,4 +29,5 @@ module FlightMessage
   MessageError = Class.new(RuntimeError)
 
   ArgumentError = Class.new(MessageError)
+  ConfigError = Class.new(MessageError)
 end

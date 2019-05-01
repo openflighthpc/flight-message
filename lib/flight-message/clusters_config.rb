@@ -25,34 +25,43 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
-require 'flight-message/utils'
+require 'flight-message/config'
+require 'flight-message/exceptions'
 
 module FlightMessage
-  class Config
+  module ClustersConfig
     class << self
-      def instance
-        @instance ||= Config.new
-      end
-
-      def method_missing(s, *a, &b)
-        if instance.respond_to?(s)
-          instance.send(s, *a, &b)
+      def default
+        if c =  clusters['default']
+          c
         else
-          super
+          raise ConfigError, "No default cluster set in config file"
         end
       end
 
-      def respond_to_missing?(s)
-        instance.respond_to?(s)
+      private
+      def clusters
+        @clusters ||= load
       end
-    end
 
-    attr_reader :root_dir, :store_dir, :cluster_config_path
+      def load
+        unless File.readable?(Config.cluster_config_path)
+          raise ConfigError, <<-ERROR.chomp
+Cluster config at #{Config.cluster_config_path} is inaccessible
+        ERROR
+        end
+        load_cluster_config(Config.cluster_config_path)
+      end
 
-    def initialize
-      @root_dir = File.expand_path(File.join(File.dirname(__FILE__), '../..'))
-      @store_dir = File.join(@root_dir, 'var/store')
-      @cluster_config_path = File.join(@root_dir, 'etc/clusters.yml')
+      def load_cluster_config(f)
+        Utils.load_yaml(f).tap do |contents|
+          unless contents.is_a?(Hash)
+            raise ConfigError, <<-ERROR.chomp
+Cluster config at #{f} is in an incorrect format
+            ERROR
+          end
+        end
+      end
     end
   end
 end

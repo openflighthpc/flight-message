@@ -25,6 +25,7 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
+require 'flight-message/clusters_config'
 require 'flight-message/command'
 require 'flight-message/commands/reap'
 require 'flight-message/config'
@@ -34,7 +35,7 @@ module FlightMessage
   module Commands
     class Show < Command
       def run
-        cluster = @options.cluster || Config.default_cluster
+        cluster = @options.cluster || ClustersConfig.default
 
         Message.reap(cluster)
 

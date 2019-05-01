@@ -25,6 +25,7 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
+require 'flight-message/clusters_config'
 require 'flight-message/config'
 require 'flight-message/exceptions'
 require 'flight-message/utils'
@@ -91,7 +92,7 @@ module FlightMessage
 
     def create(type, asset, text, cluster = nil, lifespan = nil)
       type = soft_match_type(type)
-      cluster ||= Config.default_cluster
+      cluster ||= ClustersConfig.default
       @asset = asset
       @cluster = cluster
       data['type'] = type
