@@ -72,9 +72,7 @@ module FlightMessage
     end
 
     def create(type, asset, text, cluster = nil, lifespan = nil)
-      unless TYPES.include?(type)
-        raise ArgumentError, "Unknown message type '#{type}'"
-      end
+      type = soft_match_type(type)
       cluster ||= Config.default_cluster
       @asset = asset
       @cluster = cluster
@@ -121,6 +119,18 @@ module FlightMessage
     end
 
     private
+    def soft_match_type(type)
+      matches = TYPES.select { |t| t.start_with?(type.downcase) }
+      if matches.empty?
+        raise ArgumentError, "Unknown message type '#{type}'"
+      elsif matches.length > 1
+        raise ArgumentError, "Ambiguous type '#{type}'"
+      else
+        return matches[0]
+      end
+    end
+
+
     def parse_lifespan(lifespan, received)
       unless m = lifespan.match(/^(\d+)([dhm])$/)
         raise ArgumentError, <<-ERROR
