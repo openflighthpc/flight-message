@@ -154,20 +154,24 @@ module FlightMessage
 
 
     def parse_lifespan(lifespan, received)
-      unless m = lifespan.match(/^(\d+)([dhm])$/)
+      matches = lifespan.scan(/(\d+)([dhm])/)
+      if matches.empty?
         raise ArgumentError, <<-ERROR
 Invalid lifespan '#{lifespan}'
-Specify an amount of days (d), hours (h), or minutes (m)"
+Specify an amount of days (d), hours (h), and minutes (m)"
         ERROR
       end
-      quantity, unit = m[1].to_i, m[2]
-      expiry = case unit
-        when 'd'
-          received + (quantity * 24 * 60 * 60)
-        when 'h'
-          received + (quantity * 60 * 60)
-        when 'm'
-          received + (quantity * 60)
+      expiry = received
+      matches.each do |m|
+        quantity, unit = m[0].to_i, m[1]
+        expiry = case unit
+          when 'd'
+            expiry + (quantity * 24 * 60 * 60)
+          when 'h'
+            expiry + (quantity * 60 * 60)
+          when 'm'
+            expiry +(quantity * 60)
+        end
       end
       return expiry
     end

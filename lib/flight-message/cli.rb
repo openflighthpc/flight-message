@@ -63,7 +63,7 @@ module FlightMessage
       add_cluster_option(c)
       c.option '-l', '--lifespan PERIOD',
         'Set a time of expiry for the message - '\
-        'some amount of days (d), hours (h), or minutes (m)'
+        'some amount of days (d), hours (h), and minutes (m)'
       c.action(Commands, :create)
     end
 
