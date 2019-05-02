@@ -32,7 +32,8 @@ module FlightMessage
   module Commands
     class Reap < Command
       def run
-        Message.reap
+        cluster = @argv[0] || '*'
+        Message.reap(cluster)
       end
     end
   end
