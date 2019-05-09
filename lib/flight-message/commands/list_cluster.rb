@@ -25,37 +25,19 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
-require 'flight-message/commands/create'
-require 'flight-message/commands/delete_cluster'
-require 'flight-message/commands/delete'
-require 'flight-message/commands/init_cluster'
-require 'flight-message/commands/list_cluster'
-require 'flight-message/commands/reap'
-require 'flight-message/commands/show'
+require 'flight-message/command'
+require 'flight-message/clusters_config'
 
 module FlightMessage
   module Commands
-    class << self
-      def method_missing(s, *a, &b)
-        if clazz = to_class(s)
-          clazz.new(*a).run!
-        else
-          raise 'command not defined'
+    class ListCluster < Command
+      def run
+        clusters = ClustersConfig.list
+        clusters.each do |c|
+          new_c = c == ClustersConfig.current ? "*#{ClustersConfig.current}" : c
+          puts new_c
         end
-      end
-
-      def respond_to_missing?(s)
-        !!to_class(s)
-      end
-
-      private
-      def to_class(s)
-        s.to_s.split('-').reduce(self) do |clazz, p|
-          p.gsub!(/_(.)/) {|a| a[1].upcase}
-          clazz.const_get(p[0].upcase + p[1..-1])
-        end
-      rescue NameError
-        nil
+        puts "\n# * - currently selected"
       end
     end
   end

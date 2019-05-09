@@ -98,5 +98,11 @@ module FlightMessage
       c.description = "Remove a cluster"
       c.action(Commands, :delete_cluster)
     end
+
+    command :'list-cluster' do |c|
+      cli_syntax(c)
+      c.description = "List all clusters and which cluster is currently selected"
+      c.action(Commands, :list_cluster)
+    end
   end
 end
