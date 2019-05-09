@@ -170,7 +170,7 @@ Specify an amount of days (d), hours (h), and minutes (m)"
           when 'h'
             expiry + (quantity * 60 * 60)
           when 'm'
-            expiry +(quantity * 60)
+            expiry + (quantity * 60)
         end
       end
       return expiry
