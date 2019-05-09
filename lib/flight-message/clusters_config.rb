@@ -31,6 +31,21 @@ require 'flight-message/exceptions'
 module FlightMessage
   module ClustersConfig
     class << self
+      def current
+        if c = clusters['current']
+          c
+        else
+          default
+        end
+      end
+
+      def current=(cluster)
+        data = load
+        data['current'] = cluster
+        yaml = data.to_yaml
+        File.open(path, 'w') { |f| f.write(yaml) }
+      end
+
       def default
         if c =  clusters['default']
           c
@@ -39,18 +54,30 @@ module FlightMessage
         end
       end
 
+      def list
+        clusters = Dir.glob(File.join(Config.store_dir, '*')).map do |p|
+          File.basename(p)
+        end
+        clusters << current unless clusters.include?(current)
+        clusters
+      end
+
+      def path
+        Config.cluster_config_path
+      end
+
       private
       def clusters
         @clusters ||= load
       end
 
       def load
-        unless File.readable?(Config.cluster_config_path)
+        unless File.readable?(path)
           raise ConfigError, <<-ERROR.chomp
-Cluster config at #{Config.cluster_config_path} is inaccessible
+Cluster config at #{path} is inaccessible
         ERROR
         end
-        load_cluster_config(Config.cluster_config_path)
+        load_cluster_config(path)
       end
 
       def load_cluster_config(f)
