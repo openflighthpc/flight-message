@@ -86,5 +86,11 @@ module FlightMessage
       c.description = "Remove all messages that have been made obselete"
       c.action(Commands, :reap)
     end
+
+    command :'init-cluster' do |c|
+      cli_syntax(c, 'CLUSTER')
+      c.description = "Create a new cluster"
+      c.action(Commands, :'init_cluster')
+    end
   end
 end
