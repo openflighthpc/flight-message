@@ -95,7 +95,7 @@ module FlightMessage
 
     def create(type, asset, text, cluster = nil, lifespan = nil)
       type = soft_match_type(type)
-      cluster ||= ClustersConfig.default
+      cluster ||= ClustersConfig.current
       @asset = asset
       @cluster = cluster
       data['type'] = type

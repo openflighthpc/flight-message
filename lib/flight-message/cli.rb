@@ -50,17 +50,11 @@ module FlightMessage
           args_str
         ].compact.join(' ')
        end
-
-      def add_cluster_option(command)
-        command.option '-c', '--cluster CLUSTER',
-          'Specify a cluter (defaults to the value set in the config file)'
-      end
     end
 
     command :create do |c|
       cli_syntax(c, 'TYPE ASSET TEXT')
       c.description = "Create a new message"
-      add_cluster_option(c)
       c.option '-l', '--lifespan PERIOD',
         'Set a time of expiry for the message - '\
         'some amount of days (d), hours (h), and minutes (m)'
@@ -70,7 +64,6 @@ module FlightMessage
     command :show do |c|
       cli_syntax(c)
       c.description = "Show the status of all assets"
-      add_cluster_option(c)
       c.action(Commands, :show)
     end
 
@@ -81,7 +74,7 @@ module FlightMessage
     end
 
     command :reap do |c|
-      cli_syntax(c, '[CLUSTER]')
+      cli_syntax(c)
       c.hidden = true
       c.description = "Remove all messages that have been made obselete"
       c.action(Commands, :reap)

@@ -35,7 +35,7 @@ module FlightMessage
   module Commands
     class Show < Command
       def run
-        cluster = @options.cluster || ClustersConfig.default
+        cluster = ClustersConfig.current
 
         Message.reap(cluster)
 

@@ -25,6 +25,7 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
+require 'flight-message/clusters_config'
 require 'flight-message/command'
 require 'flight-message/message'
 
@@ -33,7 +34,7 @@ module FlightMessage
     class Create < Command
       def run
         msg = Message.new()
-        msg.create(*@argv[0..2], @options.cluster, @options.lifespan)
+        msg.create(*@argv[0..2], ClustersConfig.current, @options.lifespan)
         msg.save
       end
     end
