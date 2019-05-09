@@ -25,38 +25,22 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
-require 'flight-message/commands/create'
-require 'flight-message/commands/delete_cluster'
-require 'flight-message/commands/delete'
-require 'flight-message/commands/init_cluster'
-require 'flight-message/commands/list_cluster'
-require 'flight-message/commands/reap'
-require 'flight-message/commands/show'
-require 'flight-message/commands/switch_cluster'
+require 'flight-message/clusters_config'
+require 'flight-message/command'
 
 module FlightMessage
   module Commands
-    class << self
-      def method_missing(s, *a, &b)
-        if clazz = to_class(s)
-          clazz.new(*a).run!
-        else
-          raise 'command not defined'
+    class SwitchCluster < Command
+      def run
+        cluster = @argv[0]
+        unless ClustersConfig.list.include?(cluster)
+          raise ArgumentError, "Cluster '#{cluster}' not initialised"
         end
-      end
-
-      def respond_to_missing?(s)
-        !!to_class(s)
-      end
-
-      private
-      def to_class(s)
-        s.to_s.split('-').reduce(self) do |clazz, p|
-          p.gsub!(/_(.)/) {|a| a[1].upcase}
-          clazz.const_get(p[0].upcase + p[1..-1])
+        if ClustersConfig.current == cluster
+          raise ArgumentError, "Cluster '#{cluster}' is already the current cluster"
         end
-      rescue NameError
-        nil
+        ClustersConfig.current = cluster
+        puts "Switched to cluster '#{cluster}'"
       end
     end
   end

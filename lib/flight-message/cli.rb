@@ -104,5 +104,11 @@ module FlightMessage
       c.description = "List all clusters and which cluster is currently selected"
       c.action(Commands, :list_cluster)
     end
+
+    command :'switch-cluster' do |c|
+      cli_syntax(c, 'CLUSTER')
+      c.description = "Select a cluster"
+      c.action(Commands, :switch_cluster)
+    end
   end
 end
