@@ -92,5 +92,11 @@ module FlightMessage
       c.description = "Create a new cluster"
       c.action(Commands, :'init_cluster')
     end
+
+    command :'delete-cluster' do |c|
+      cli_syntax(c, 'CLUSTER')
+      c.description = "Remove a cluster"
+      c.action(Commands, :delete_cluster)
+    end
   end
 end
