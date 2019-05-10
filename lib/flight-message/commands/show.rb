@@ -29,6 +29,7 @@ require 'flight-message/clusters_config'
 require 'flight-message/command'
 require 'flight-message/commands/reap'
 require 'flight-message/config'
+require 'flight-message/exceptions'
 require 'flight-message/message'
 
 module FlightMessage
@@ -37,9 +38,20 @@ module FlightMessage
       def run
         cluster = ClustersConfig.current
 
+        #TODO make this asset specific if called on a single asset if speed
+        # becomes an issue.
         Message.reap(cluster)
 
-        asset_dirs = Dir.glob(File.join(Config.store_dir, cluster, '*'))
+        asset_dirs = if asset = @argv.first
+                       path = File.join(Config.store_dir, cluster, asset)
+                       unless File.directory?(path)
+                         raise ArgumentError, "Asset not found - '#{asset}'"
+                       end
+                       [path]
+                     else
+                       Dir.glob(File.join(Config.store_dir, cluster, '*'))
+                     end
+
         asset_dirs.sort!
         asset_dirs.each do |asset_dir|
           messages = Message.load_dir(asset_dir)

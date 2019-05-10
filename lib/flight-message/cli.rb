@@ -62,7 +62,7 @@ module FlightMessage
     end
 
     command :show do |c|
-      cli_syntax(c)
+      cli_syntax(c, '[ASSET]')
       c.description = "Show the status of all assets"
       c.action(Commands, :show)
     end
