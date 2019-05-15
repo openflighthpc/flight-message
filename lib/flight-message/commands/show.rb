@@ -62,7 +62,7 @@ module FlightMessage
           end
           puts header
           info.sort_by { |m| m.data['received'] }
-          info.each { |i| puts "  #{i.id} - #{i.data['text']} - #{i.data['received']}" }
+          info.each { |i| puts "  #{i.data['received']} - #{i.id} - #{i.data['text']}" }
           puts
         end
       end
