@@ -61,7 +61,7 @@ module FlightMessage
             header = header + ":  STATUS - #{status_msg[0].data['text']}"
           end
           puts header
-          info.sort_by { |m| m.data['received'] }
+          info = info.sort_by { |m| m.data['received'] }.reverse
           info.each { |i| puts "  #{i.data['received']} - #{i.id} - #{i.data['text']}" }
           puts
         end
