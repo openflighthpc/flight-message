@@ -28,7 +28,7 @@
 
 yum install -y curl
 
-curl https://openflighthpc.s3-eu-west-1.amazonaws.com/repos/openflight-dev/openflight.repo > /etc/yum.repos.d/openflight.repo
+curl https://openflighthpc.s3-eu-west-1.amazonaws.com/repos/openflight/openflight.repo > /etc/yum.repos.d/openflight.repo
 
 yum install -y flight-message
 
