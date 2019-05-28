@@ -9,7 +9,8 @@ cluster assets.
 
 ## Installation
 
-For installation instructions please see INSTALL.md
+For installation instructions as well as how to set up Flight Message as a server
+please see INSTALL.md.
 
 ## Configuration
 
@@ -17,7 +18,7 @@ Please use `init-cluster MY_CLUSTER` before operation to specify the name of you
 cluster
 
 ## Operation
-o
+
 Messages are pieces of information about a cluster. They relate to a single asset
 and each contain some descriptive text.
 They can be one of two types: 'status' and 'information'. Status messages are
