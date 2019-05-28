@@ -73,3 +73,37 @@ curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/suppo
 ```
 
 Where 'IP_OF_SERVER' is the address of the the server machine, set up as above.
+
+# Testing
+
+The following section assumes you have a working [Vagrant](https://www.vagrantup.com/) installation.
+
+In the project's root directory there is a Vagrantfile for the setup of a test environment. To enable it as a server simply:
+
+```
+cd flight-message
+vagrant up
+```
+During this process you will need to select the correct network interface for your machine.
+At the end of the output during this process the new machine's `ip addr` data will be displayed. Contained in this is the machine's public network IP address.
+
+In the (likely) case that your network isn't on the 10.10 range you will need to:
+
+```
+vagrant ssh
+sudo -s
+vi /opt/flight/opt/message/support/apache_server_conf-centos7.sh
+```
+
+From here change the `Allow from 10.10.0.0/16` line to a subnet mask valid for your network.
+More information on subnet masks [here](https://www.iplocation.net/subnet-mask). Then save the file, exit it, and:
+
+```
+chmod 744 /opt/flight/opt/message/support/apache_server_conf-centos7.sh
+/opt/flight/opt/message/support/apache_server_conf-centos7.sh
+exit
+exit
+```
+
+The vagrant machine will now be respond to requests just remember to `export FLIGHT_MESSAGE_SERVER=<YOUR_IP>` before executing collector scripts.
+
