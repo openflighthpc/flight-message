@@ -69,7 +69,7 @@ curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/suppo
 There is also a one line curl for setting up a machine as a client, sending power information to flight message once and hour. That line is:
 
 ```
-curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/support/setup-client.rb | bash -s IP_OF_SERVER
+curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/support/setup-client.sh | bash -s IP_OF_SERVER
 ```
 
 Where 'IP_OF_SERVER' is the address of the the server machine, set up as above.
