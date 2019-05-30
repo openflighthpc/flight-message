@@ -39,7 +39,7 @@ swapped out and deleted.
 
 ```
 
-create TYPE ASSET TEXT [-l LIFESPAN]
+create TYPE ASSET TEXT [KEY=VALUE...] [-l LIFESPAN]
 
 delete ID
 

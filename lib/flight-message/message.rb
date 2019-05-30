@@ -93,7 +93,7 @@ module FlightMessage
       @id = id
     end
 
-    def create(type, asset, text, cluster = nil, lifespan = nil)
+    def create(type, asset, text, key_val_arr = [], cluster = nil, lifespan = nil)
       type = soft_match_type(type)
       cluster ||= ClustersConfig.current
       @asset = asset
@@ -103,6 +103,14 @@ module FlightMessage
       received = Time.now
       data['received'] = received.iso8601
       data['expiry'] = parse_lifespan(lifespan, received).iso8601 if lifespan
+      key_val_arr.each do |str|
+        data['misc'] ||= {}
+        unless str.split(/=/).length == 2
+          raise ArgumentError, "Invalid key-value argument '#{str}' - must contain one '='"
+        end
+        key, val = str.split(/=/)
+        data['misc'][key] = val
+      end
     end
 
     def load_from_id(id = @id)

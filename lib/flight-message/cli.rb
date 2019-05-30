@@ -53,7 +53,7 @@ module FlightMessage
     end
 
     command :create do |c|
-      cli_syntax(c, 'TYPE ASSET TEXT')
+      cli_syntax(c, 'TYPE ASSET TEXT [KEY=VALUE...]')
       c.description = "Create a new message"
       c.option '-l', '--lifespan PERIOD',
         'Set a time of expiry for the message - '\

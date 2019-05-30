@@ -34,7 +34,10 @@ module FlightMessage
     class Create < Command
       def run
         msg = Message.new()
-        msg.create(*@argv[0..2], ClustersConfig.current, @options.lifespan)
+        msg.create(*@argv[0..2],
+                   key_val_arr = @argv[3..-1],
+                   cluster = ClustersConfig.current,
+                   lifespan = @options.lifespan)
         msg.save
       end
     end
