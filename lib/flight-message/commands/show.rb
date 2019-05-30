@@ -56,11 +56,26 @@ module FlightMessage
         asset_dirs.each do |asset_dir|
           messages = Message.load_dir(asset_dir)
           status_msg, info = messages.partition { |m| m.data['type'] == 'status' }
-          header = "##{File.basename(asset_dir)}"
+          header = "##{File.basename(asset_dir)}:"
+
+          misc = []
           unless status_msg.empty?
-            header = header + ":  STATUS - #{status_msg[0].data['text']}"
+            mid_string = ' STATUS '
+            status = status_msg[0]
+            header = header + "#{mid_string}- #{status.data['text']}"
+            if status.data['misc']
+              # work out padding to allign text
+              n = header.rindex(mid_string) + mid_string.length
+              status.data['misc'].each do |key, val|
+                str = "- #{key} = #{val}"
+                (0...n).each { str = ' ' + str }
+                misc << str
+              end
+            end
           end
           puts header
+          puts misc unless misc.empty?
+
           info = info.sort_by { |m| m.data['received'] }.reverse
           info.each { |i| puts "  #{i.data['received']} - #{i.id} - #{i.data['text']}" }
           puts
