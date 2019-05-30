@@ -53,33 +53,36 @@ module FlightMessage
                      end
 
         asset_dirs.sort!
-        asset_dirs.each do |asset_dir|
-          messages = Message.load_dir(asset_dir)
-          status_msg, info = messages.partition { |m| m.data['type'] == 'status' }
-          header = "##{File.basename(asset_dir)}:"
 
-          misc = []
-          unless status_msg.empty?
-            mid_string = ' STATUS '
-            status = status_msg[0]
-            header = header + "#{mid_string}- #{status.data['text']}"
-            if status.data['misc']
-              # work out padding to allign text
-              n = header.rindex(mid_string) + mid_string.length
-              status.data['misc'].each do |key, val|
-                str = "- #{key} = #{val}"
-                (0...n).each { str = ' ' + str }
-                misc << str
-              end
+        asset_dirs.each { |asset_dir| output_asset(asset_dir) }
+      end
+
+      def output_asset(asset_dir)
+        messages = Message.load_dir(asset_dir)
+        status_msg, info = messages.partition { |m| m.data['type'] == 'status' }
+        header = "##{File.basename(asset_dir)}:"
+
+        misc = []
+        unless status_msg.empty?
+          mid_string = ' STATUS '
+          status = status_msg[0]
+          header = header + "#{mid_string}- #{status.data['text']}"
+          if status.data['misc']
+            # work out padding to allign text
+            n = header.rindex(mid_string) + mid_string.length
+            status.data['misc'].each do |key, val|
+              str = "- #{key} = #{val}"
+              (0...n).each { str = ' ' + str }
+              misc << str
             end
           end
-          puts header
-          puts misc unless misc.empty?
-
-          info = info.sort_by { |m| m.data['received'] }.reverse
-          info.each { |i| puts "  #{i.data['received']} - #{i.id} - #{i.data['text']}" }
-          puts
         end
+        puts header
+        puts misc unless misc.empty?
+
+        info = info.sort_by { |m| m.data['received'] }.reverse
+        info.each { |i| puts "  #{i.data['received']} - #{i.id} - #{i.data['text']}" }
+        puts
       end
     end
   end
