@@ -44,13 +44,13 @@ mkdir -p /opt/flight/opt/message/export/exec
 
 cat << 'EOF' > /opt/flight/opt/message/export/exec/create_status.php
 <?php
-$text = "OK";
+$extra = "";
 $keys = array_keys($_GET);
 /* starting at index 1 as 'asset' is expected to be the first elem */
 for($i=1; $i < count($_GET); ++$i) {
-  $text .= " | {$keys[$i]} = {$_GET[$keys[$i]]}";
+  $extra .= " \"{$keys[$i]}\"=\"{$_GET[$keys[$i]]}\"";
 }
-$cmd = "sudo /opt/flight/bin/flight message create status {$_GET['asset']} \"{$text}\" --lifespan 1h";
+$cmd = "sudo /opt/flight/bin/flight message create status {$_GET['asset']} OK {$extra} --lifespan 1h";
 echo exec(escapeshellcmd($cmd));
 ?>
 EOF
