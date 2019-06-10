@@ -64,7 +64,7 @@ requests from a private network.
 curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/support/install-centos7.sh | bash
 ```
 
-# Setting up clients
+# Setting Up Clients
 
 There is also a one line curl for setting up a machine as a client, sending power information to flight message once and hour. That line is:
 
@@ -72,7 +72,21 @@ There is also a one line curl for setting up a machine as a client, sending powe
 curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/support/setup-client.sh | bash -s IP_OF_SERVER
 ```
 
-Where 'IP_OF_SERVER' is the address of the the server machine, set up as above.
+Where 'IP_OF_SERVER' is the address of the server machine, set up as above.
+
+# Ganglia Integration
+
+There is also a script for exporting Message data to an existing, preconfigured Ganglia server.
+It will export key-value pairs in each asset's most recent status as floats using `gmetric`.
+It will try its best to split this value into a numerical value and units (if present) - IT IS
+NOT DESIGNED TO WORK WITH NON-NUMERICAL VALUES, any values that can't be cast to a float will
+be ignored by Ganglia.
+
+The script is found at support/output_via_gmetric.rb. It should be ran regularly on the server
+via a cron job or equivalent.
+
+It is also potentially very fragile in general; it has only been tested with a restricted set
+of key-value pairs and should be used with care.
 
 # Testing
 
