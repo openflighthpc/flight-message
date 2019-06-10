@@ -26,7 +26,7 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
-yum -y install httpd php
+yum -y install httpd php syslinux
 
 cat << EOF > /etc/httpd/conf.d/collector.conf
 <Directory /opt/flight/opt/message/export/>
