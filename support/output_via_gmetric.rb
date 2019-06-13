@@ -26,7 +26,6 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
-
 # CURRENTLY DESIGNED TO WORK ONLY WITH METRICS THAT HAVE EXCLUSIVELY NUMERICAL VALUES.
 # Will need modification if any string values are expected.
 
@@ -42,11 +41,13 @@ assets_text = show_data.split(/^#/).delete_if { |a| a.empty? }
 assets_text.each do |a|
   lines = a.split(/\n/)
   asset = lines.shift.match(/^(.*?):/)[1]
+
   ip = Open3.capture3("gethostip -d #{asset}")[0].chomp
   if not ip or ip.match(/\s+/)
     puts "ERROR: Cant' find an ip for asset '#{asset}' - skipping"
     next
   end
+
   key_lines = lines.partition { |line| line.match(/^\s*-/) }[0]
   key_lines.each do |line|
     key, value = line.match(/- (.*) = (.*)$/)[1..2]
