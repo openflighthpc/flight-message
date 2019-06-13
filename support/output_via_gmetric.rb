@@ -47,7 +47,7 @@ assets_text.each do |a|
     puts "ERROR: Cant' find an ip for asset '#{asset}' - skipping"
     next
   end
-  key_lines = lines.partition { |line| line.match(/\s*-/) }[0]
+  key_lines = lines.partition { |line| line.match(/^\s*-/) }[0]
   key_lines.each do |line|
     key, value = line.match(/- (.*) = (.*)$/)[1..2]
     if split = value.split(' ') and split.length > 1
