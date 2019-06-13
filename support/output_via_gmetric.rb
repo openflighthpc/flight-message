@@ -26,10 +26,11 @@
 # https://github.com/openflighthpc/flight-message
 # ==============================================================================
 
-# CURRENTLY DESIGNED TO WORK ONLY WITH METRICS THAT HAVE EXCLUSIVELY NUMERICAL VALUES.
-# Will need modification if any string values are expected.
-
 require 'open3'
+
+def is_number?(value)
+  true if Float(value) rescue false
+end
 
 show_data, _, status = Open3.capture3('/opt/flight/bin/flight message show')
 unless status.exitstatus == 0
@@ -55,7 +56,8 @@ assets_text.each do |a|
       value = split[0]
       unit = split[1..-1].join(' ')
     end
-    cmd = "gmetric -S #{ip}:#{asset} -n #{key} -v #{value} -t float -g flight_message"
+    type = is_number?(value) ? 'float' : 'string'
+    cmd = "gmetric -S #{ip}:#{asset} -n #{key} -v #{value} -t #{type} -g flight_message"
     cmd = cmd + " -u #{unit}" if unit
     Open3.capture3(cmd)
   end
