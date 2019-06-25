@@ -31,17 +31,21 @@ if [[ $# -eq 0 ]] ; then
   exit 0
 fi
 
-mkdir -p /opt/service/message/
-
 yum install -y curl ruby
 
-curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/scripts/collectors/collect_power.rb > /opt/service/message/collect_power.rb
+FILE=/opt/service/message/collect_power.rb
 
-chown root:root /opt/service/message/collect_power.rb
-chmod 700 /opt/service/message/collect_power.rb
+if [[ ! -f $FILE ]]; then
+  mkdir -p /opt/service/message/
+
+  curl https://raw.githubusercontent.com/openflighthpc/flight-message/master/scripts/collectors/collect_power.rb > $FILE
+
+  chown root:root $FILE
+  chmod 700 $FILE
+fi
 
 echo "#!/bin/bash" > /etc/cron.hourly/flight_message_collect_power
-echo "export FLIGHT_MESSAGE_SERVER=$1 && /opt/service/message/collect_power.rb" >> /etc/cron.hourly/flight_message_collect_power
+echo "export FLIGHT_MESSAGE_SERVER=$1 && $FILE" >> /etc/cron.hourly/flight_message_collect_power
 
 chown root:root /etc/cron.hourly/flight_message_collect_power
 chmod 700 /etc/cron.hourly/flight_message_collect_power
